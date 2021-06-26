@@ -63,64 +63,13 @@ class KWS:
     fs = 16000
 
     class_dict = {
-        'backward': 0,
-        'bed': 1,
-        'bird': 2,
-        'cat': 3,
-        'dog': 4,
-        'down': 5,
-        'eight': 6,
-        'five': 7,
-        'follow': 8,
-        'forward': 9,
-        'four': 10,
-        'go': 11,
-        'happy': 12,
-        'house': 13,
-        'learn': 14,
-        'left': 15,
-        'marvin': 16,
-        'nine': 17,
-        'no': 18,
-        'off': 19,
-        'on': 20,
-        'one': 21,
-        'right': 22,
-        'seven': 23,
-        'sheila': 24,
-        'six': 25,
-        'stop': 26,
-        'three': 27,
-        'tree': 28,
-        'two': 29,
-        'up': 30,
-        'visual': 31,
-        'wow': 32,
-        'yes': 33,
-        'zero': 34
+        'yes': 1,
+        'no': 2,
     }
 
     desired_class_dict = {
-        'up': 0,
-        'down': 1,
-        'left': 2,
-        'right': 3,
-        'stop': 4,
-        'go': 5,
-        'yes': 6,
-        'no': 7,
-        'on': 8,
-        'off': 9,
-        'one': 10,
-        'two': 11,
-        'three': 12,
-        'four': 13,
-        'five': 14,
-        'six': 15,
-        'seven': 16,
-        'eight': 17,
-        'nine': 18,
-        'zero': 19
+        'yes': 1,
+        'no': 2,
     }
 
     def __init__(self, root, transform=None, download=False):
@@ -253,6 +202,10 @@ class KWS:
                                        filename=None,
                                        md5=None,
                                        remove_finished=False):
+        if os.path.exists(os.path.join(self.raw_folder, '_background_noise_')):
+            print("Already extracted")
+            return
+
         download_root = os.path.expanduser(download_root)
         if extract_root is None:
             extract_root = download_root
@@ -345,11 +298,7 @@ class KWS:
             test_data_path = self.raw_folder
             lst = os.listdir(test_data_path)
             lst = sorted(lst)
-            labels = [
-                d for d in lst
-                if os.path.isdir(os.path.join(test_data_path, d))
-                and d[0].isalpha()
-            ]
+            labels = list(self.class_dict)
 
             # PARAMETERS
             data_len = 128 * 128
@@ -576,9 +525,5 @@ def get_classnames():
     """
     name of labels
     """
-    class_names = [
-        'up', 'down', 'left', 'right', 'stop', 'go', 'yes', 'no', 'on', 'off',
-        'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine',
-        'zero', 'unknown'
-    ]
+    class_names = list(KWS(root=None).desired_class_dict) + ['unknown']
     return class_names
